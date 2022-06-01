@@ -1,4 +1,4 @@
-This repo contains a super basic example of validation webhook in kubernetes.
+This repo contains a super basic example of validation webhook in kubernetes. The detailed usage is provided https://technekey.com/how-to-setup-a-mutation-webhook-in-kubernetes/ 
 
 ```
 #build the image from the directory with Dockerfile
