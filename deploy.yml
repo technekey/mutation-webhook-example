@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: mutation-webhook
+  name: mutation-webhook
+  namespace: custom-webhooks
+spec:
+  selector:
+    matchLabels:
+      app: mutation-webhook
+  template:
+    metadata:
+      labels:
+        app: mutation-webhook
+    spec:
+      containers:
+      - env:
+        - name: CERT
+          value: /etc/kubernetes/webhook-pki/mutation-webhook/tls.crt
+        - name: KEY
+          value: /etc/kubernetes/webhook-pki/mutation-webhook/tls.key
+        - name: HOST
+          value: 0.0.0.0
+        - name: PORT
+          value: "8080"
+        - name: DEBUG
+          value: "true"
+        image: technekey/mutate-prod-deployment-replicas:latest
+        imagePullPolicy: Always
+        name: mutation-webhook
+        volumeMounts:
+        - mountPath: /etc/kubernetes/webhook-pki/mutation-webhook
+          name: mutation-webhook-admission-plugins-secret
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - name: mutation-webhook-admission-plugins-secret
+        secret:
+          secretName: mutation-webhook-webhook-secret
